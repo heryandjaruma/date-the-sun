@@ -9,23 +9,38 @@
 import SwiftUI
 
 struct MainScreenView: View {
-    var mood: KiranMood = .neutral
     var userName: String = "UJ"
-    var uvIndex: Int = 4
-    var message: String = "Sun's out, it's gentle today. Perfect weather for a light stroll."
+
+    /// Tapping the UV pill cycles Kiran through these moods.
+    private let moodCycle: [KiranMood] = [.neutral, .happy, .toxic]
+
+    @State private var mood: KiranMood = .neutral
+
+    private var message: String {
+        mood == .neutral
+            ? "Sun's out, it's gentle today. Perfect weather for a light stroll."
+            : mood.line
+    }
 
     var body: some View {
         ZStack(alignment: .top) {
-            SkyGlowBackground()
+            SkyGlowBackground(tint: mood.glow)
                 .ignoresSafeArea()
 
-            // Kiran, full-body and centered, head sitting just below the UV pill.
+            // Kiran, full-body and centered. The float runs on its own phase
+            // loop so it keeps going when the mood (and artwork) changes.
             GeometryReader { geo in
-                SunCharacterView(mood: mood)
-                    .scaledToFit()
-                    .frame(width: geo.size.width * 0.80)
-                    .frame(maxWidth: .infinity, alignment: .top)
-                    .offset(y: geo.size.height * 0.15)
+                PhaseAnimator([false, true]) { lift in
+                    SunCharacterView(mood: mood)
+                        .scaledToFit()
+                        .frame(width: geo.size.width * 0.80)
+                        .frame(maxWidth: .infinity, alignment: .top)
+                        .offset(y: geo.size.height * 0.15)
+                        .rotationEffect(.degrees(lift ? -1.3 : 1.3), anchor: .bottom)
+                        .offset(y: lift ? -6 : 6)
+                } animation: { _ in
+                    .easeInOut(duration: 2.4)
+                }
             }
             .ignoresSafeArea()
 
@@ -45,7 +60,14 @@ struct MainScreenView: View {
                     .minimumScaleFactor(0.7)
                     .lineLimit(2)
 
-                UVIndexBadge(value: uvIndex)
+                UVIndexBadge(value: mood.uvIndex, iconColor: mood.accent)
+                    .contentShape(Capsule())
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.45)) {
+                            let i = moodCycle.firstIndex(of: mood) ?? 0
+                            mood = moodCycle[(i + 1) % moodCycle.count]
+                        }
+                    }
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 24)
@@ -66,14 +88,16 @@ struct MainScreenView: View {
 
 struct UVIndexBadge: View {
     var value: Int
+    var iconColor: Color = Color(hex: 0xF26A1B)
 
     var body: some View {
         HStack(spacing: 7) {
             Image(systemName: "sun.max.fill")
                 .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(Color(hex: 0xF26A1B))
+                .foregroundStyle(iconColor)
             Text("UV Index")
             Text("\(value)")
+                .contentTransition(.numericText())
         }
         .font(.system(size: 20, weight: .bold))
         .foregroundStyle(Palette.ink)
@@ -112,19 +136,21 @@ struct SpeechBubble: View {
 
 // MARK: - Backgrounds
 
-/// White canvas with a soft blue glow behind the character (Main Screen Option 1).
+/// White canvas with a soft glow behind the character, tinted to Kiran's mood.
 struct SkyGlowBackground: View {
+    var tint: Color = Color(hex: 0x86C2EC)
+
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [Color(hex: 0xE8F3FB), .white],
+                colors: [tint.opacity(0.22), .white],
                 startPoint: .top,
                 endPoint: .bottom
             )
             RadialGradient(
                 colors: [
-                    Color(hex: 0xBBDDF2).opacity(0.85),
-                    Color(hex: 0xD6EAF7).opacity(0.35),
+                    tint.opacity(0.55),
+                    tint.opacity(0.18),
                     .clear,
                 ],
                 center: UnitPoint(x: 0.5, y: 0.42),

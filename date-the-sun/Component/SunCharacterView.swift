@@ -36,6 +36,26 @@ enum KiranMood: String, CaseIterable {
         }
     }
 
+    /// Soft tint for the glow behind Kiran in this mood.
+    var glow: Color {
+        switch self {
+        case .happy:   Color(hex: 0xF0A6C4)
+        case .calm:    Color(hex: 0x8AA0EE)
+        case .neutral: Color(hex: 0x86C2EC)
+        case .toxic:   Color(hex: 0xEE6A4F)
+        }
+    }
+
+    /// Representative UV reading shown for this mood.
+    var uvIndex: Int {
+        switch self {
+        case .happy:   5
+        case .calm:    2
+        case .neutral: 4
+        case .toxic:   11
+        }
+    }
+
     /// A representative line of dialogue from the character brief.
     var line: String {
         switch self {
@@ -56,6 +76,8 @@ struct SunCharacterView: View {
         if UIImage(named: mood.assetName) != nil {
             Image(mood.assetName)
                 .resizable()
+                .transition(.opacity)       // crossfade when the mood changes
+                .id(mood.assetName)
         } else {
             VectorSunCharacter()
         }

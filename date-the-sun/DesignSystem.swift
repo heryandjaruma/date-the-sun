@@ -54,6 +54,16 @@ enum Palette {
     // Tab bar
     static let barBG      = Color(hex: 0x14151A)
     static let barIcon    = Color(hex: 0xCFCFD4)
+
+    // Summary screen
+    static let paper       = Color(hex: 0xFAF6E9)   // warm ivory background
+    static let cardHeader  = Color(hex: 0x1C1B1A)   // near-black card headers
+    static let heroBlue    = Color(hex: 0x5B9BD5)   // hero card
+    static let limeCard    = Color(hex: 0xC6D14E)   // sun-exposure card
+    static let pinkCard     = Color(hex: 0xD76E92)   // protection-log card
+    static let indoorTime  = Color(hex: 0x5AA0DC)   // dial: indoor
+    static let outdoorTime = Color(hex: 0xE0578F)   // dial: outdoor
+    static let uvPeak      = Color(hex: 0xF2682A)   // dial: UV peak
 }
 
 // MARK: - Shapes
