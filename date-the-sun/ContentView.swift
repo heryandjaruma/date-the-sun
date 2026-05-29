@@ -13,7 +13,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             Tab("Today", systemImage: "sun.max.fill") {
-                MainView()
+                HappyView()
             }
             Tab("Summary", systemImage: "lines.measurement.horizontal") {
                 Text("Hello Summary")

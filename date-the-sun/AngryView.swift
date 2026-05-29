@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  AngryView.swift
 //  date-the-sun
 //
 //  Created by I Gusti Ngurah Bagus Ferry Mahayudha on 29/05/26.
@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-struct MainView: View {
-    
+struct AngryView: View {
     private var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM d, yyyy" // MMMM = Full Month name, d = Day, yyyy = Year
@@ -19,13 +18,13 @@ struct MainView: View {
         
         ZStack {
             
-            Color(red: 0.94, green: 0.97, blue: 1.0)
+            Color(red: 1.0, green: 0.94, blue: 0.94)
                     .ignoresSafeArea()
                 
             // 2. The glowing circular/elliptical gradient layer
             GeometryReader { geometry in
                 EllipticalGradient(
-                    colors: [Color.blue.opacity(0.35), Color.clear],
+                    colors: [Color.red.opacity(0.35), Color.clear], // 👈 Changed from .blue to .red
                     center: .center
                 )
                 // Make the gradient shape a massive circle/ellipse relative to the screen width
@@ -43,7 +42,7 @@ struct MainView: View {
                 
                 HStack {
                     Spacer()
-                    Image("happy_kiran_2") // Your asset
+                    Image("angry_kiran_1") // Your asset
                         .resizable()
                         .scaledToFit()
                         .frame(width: 500, height: 800)
@@ -64,6 +63,7 @@ struct MainView: View {
                         .foregroundColor(.secondary)
                 }
                 .padding(.horizontal)
+                .frame(width: UIScreen.main.bounds.width)
                 
                 UVBadgeView()
                 .padding()
@@ -72,7 +72,7 @@ struct MainView: View {
                 
                 // Middle area: Dialogue bubble pushed over to the left
                 HStack {
-                    DialogueBubbleView(text: "Sun's out, but it's gentle today. Perfect weather for a light stroll.")
+                    DialogueBubbleView(text: "You’re spending way too much time with me, do you want to get burned or something?")
                         .frame(maxWidth: 190) // Constrain width so it wraps beautifully
                         .padding(.leading, 65)
                         .offset(y: -60)
@@ -86,5 +86,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    AngryView()
 }
