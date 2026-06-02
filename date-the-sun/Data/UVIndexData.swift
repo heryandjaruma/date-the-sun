@@ -37,7 +37,7 @@ struct HourlyWeather: Codable {
 }
 
 class WeatherService {
-    func fetchWeather(latitude: Double = -8.4095, longitude: Double = 115.1889) async throws -> WeatherResponse {
+    func fetchWeather(latitude: Double = 0.0389,longitude: Double = 46.6753) async throws -> WeatherResponse {
         // Explicitly asks for uv_index in hourly parameters, and localizes time arrays
         let urlString = "https://api.open-meteo.com/v1/forecast?latitude=\(latitude)&longitude=\(longitude)&current=temperature_2m,wind_speed_10m&hourly=uv_index&timezone=auto"
         
